@@ -1,34 +1,60 @@
-import { FILMS, trierPar, libelleStatut, formaterTitre } from "./lib/utils";
-import type { Film } from "./lib/utils";
-import "./App.css";
+// Consigne 7 — assemblage
+// Trois sections construites a partir des fonctions du TP1, plus la
+// demonstration des quatre etats du bouton.
 
-// Consigne 7 : afficher trois films types.
-// trierPar est la fonction generique du bloc 4 : TS en deduit T = Film,
-// donc SELECTION est bien un Film[] et pas un any[].
-const SELECTION: Film[] = trierPar(FILMS, "annee").slice(0, 3);
+import { FILMS, trierPar, filtrerParGenre, formaterTitre } from "./lib/utils";
+import { ListeFilms } from "./composants/ListeFilms";
+import { Bouton } from "./composants/Bouton";
+
+// Calcules une seule fois : ils ne dependent d'aucune prop.
+const parTitre = trierPar(FILMS, "titre");
+const drames = filtrerParGenre(FILMS, "Drame");
+const documentaires = filtrerParGenre(FILMS, "Documentaire"); // volontairement vide
 
 function App() {
   return (
-    <main className="catalogue">
-      <h1>Catalogue de films</h1>
-      <p className="intro">
-        Trois entrees du module <code>utils.ts</code>, migre en TypeScript strict.
-      </p>
+    <main className="min-h-screen bg-slate-50 px-6 py-10">
+      <div className="mx-auto max-w-7xl">
+        <header className="mb-10">
+          <h1 className="text-3xl font-bold text-slate-900">Catalogue de films</h1>
+          <p className="mt-1 text-slate-500">
+            {FILMS.length} films, composants typés et mise en forme Tailwind.
+          </p>
+        </header>
 
-      <ul className="fiches">
-        {SELECTION.map((film) => (
-          <li key={film.id} className="fiche">
-            <h2>{formaterTitre(film.titre, film.annee)}</h2>
-            <p className="statut">{libelleStatut(film)}</p>
-            <ul className="genres">
-              {film.genres.map((genre) => (
-                <li key={genre}>{genre}</li>
-              ))}
-            </ul>
-            <p className="note">{film.note.toFixed(1)}/10</p>
-          </li>
-        ))}
-      </ul>
+        <section className="mb-10">
+          <h2 className="mb-4 text-xl font-semibold text-slate-900">Tous les films</h2>
+          <ListeFilms
+            films={parTitre}
+            onSelection={(film) => alert(formaterTitre(film.titre, film.annee))}
+          />
+        </section>
+
+        <section className="mb-10">
+          <h2 className="mb-4 text-xl font-semibold text-slate-900">Drames</h2>
+          <ListeFilms films={drames} />
+        </section>
+
+        <section className="mb-10">
+          <h2 className="mb-4 text-xl font-semibold text-slate-900">Documentaires</h2>
+          <ListeFilms
+            films={documentaires}
+            messageVide="Aucun documentaire dans le catalogue pour le moment."
+          />
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Les quatre états du composant Bouton
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            <Bouton libelle="Action principale" />
+            <Bouton libelle="Action secondaire" variante="secondaire" />
+            <Bouton libelle="Supprimer" variante="danger" />
+            <Bouton libelle="Indisponible" desactive />
+          </div>
+        </section>
+      </div>
     </main>
   );
 }
