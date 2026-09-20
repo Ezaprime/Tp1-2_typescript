@@ -3,11 +3,13 @@
 // vaut true, et dont les classes Tailwind changent selon la variante.
 
 export type VarianteBouton = "primaire" | "secondaire" | "danger";
+export type TypeBouton = "button" | "submit";
 
 export interface BoutonProps {
   libelle: string;
-  variante?: VarianteBouton; // "primaire" par defaut
-  desactive?: boolean;       // false par defaut
+  variante?: VarianteBouton;
+  desactive?: boolean;
+  type?: TypeBouton;
   onClick?: () => void;
 }
 
@@ -23,10 +25,12 @@ export function Bouton({
   libelle,
   variante = "primaire",
   desactive = false,
+  type = "button",
   onClick,
 }: BoutonProps) {
   return (
     <button
+      type={type}
       disabled={desactive}
       onClick={onClick}
       className={`rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${classes[variante]}`}

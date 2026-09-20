@@ -1,61 +1,36 @@
-// Consigne 7 — assemblage
-// Trois sections construites a partir des fonctions du TP1, plus la
-// demonstration des quatre etats du bouton.
-
-import { FILMS, trierPar, filtrerParGenre, formaterTitre } from "./lib/utils";
-import { ListeFilms } from "./composants/ListeFilms";
-import { Bouton } from "./composants/Bouton";
-
-// Calcules une seule fois : ils ne dependent d'aucune prop.
-const parTitre = trierPar(FILMS, "titre");
-const drames = filtrerParGenre(FILMS, "Drame");
-const documentaires = filtrerParGenre(FILMS, "Documentaire"); // volontairement vide
+import { Routes, Route } from "react-router-dom";
+import { Layout } from "./composants/Layout";
+import { RouteProtegee } from "./composants/RouteProtegee";
+import { Accueil } from "./pages/Accueil";
+import { Recherche } from "./pages/Recherche";
+import { DetailFilm } from "./pages/DetailFilm";
+import { Favoris } from "./pages/Favoris";
+import { Connexion } from "./pages/Connexion";
+import { Catalogue } from "./pages/Catalogue";
+import { InscriptionPage } from "./pages/Inscription";
+import { PageIntrouvable } from "./pages/PageIntrouvable";
 
 function App() {
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-10">
-      <div className="mx-auto max-w-7xl">
-        <header className="mb-10">
-          <h1 className="text-3xl font-bold text-slate-900">Catalogue de films</h1>
-          <p className="mt-1 text-slate-500">
-            {FILMS.length} films, composants typés et mise en forme Tailwind.
-          </p>
-        </header>
-
-        <section className="mb-10">
-          <h2 className="mb-4 text-xl font-semibold text-slate-900">Tous les films</h2>
-          <ListeFilms
-            films={parTitre}
-            onSelection={(film) => alert(formaterTitre(film.titre, film.annee))}
-          />
-        </section>
-
-        <section className="mb-10">
-          <h2 className="mb-4 text-xl font-semibold text-slate-900">Drames</h2>
-          <ListeFilms films={drames} />
-        </section>
-
-        <section className="mb-10">
-          <h2 className="mb-4 text-xl font-semibold text-slate-900">Documentaires</h2>
-          <ListeFilms
-            films={documentaires}
-            messageVide="Aucun documentaire dans le catalogue pour le moment."
-          />
-        </section>
-
-        <section>
-          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
-            Les quatre états du composant Bouton
-          </h2>
-          <div className="flex flex-wrap gap-3">
-            <Bouton libelle="Action principale" />
-            <Bouton libelle="Action secondaire" variante="secondaire" />
-            <Bouton libelle="Supprimer" variante="danger" />
-            <Bouton libelle="Indisponible" desactive />
-          </div>
-        </section>
-      </div>
-    </main>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Accueil />} />
+        <Route path="recherche" element={<Recherche />} />
+        <Route path="films/:id" element={<DetailFilm />} />
+        <Route
+          path="favoris"
+          element={
+            <RouteProtegee>
+              <Favoris />
+            </RouteProtegee>
+          }
+        />
+        <Route path="connexion" element={<Connexion />} />
+        <Route path="catalogue" element={<Catalogue />} />
+        <Route path="inscription" element={<InscriptionPage />} />
+        <Route path="*" element={<PageIntrouvable />} />
+      </Route>
+    </Routes>
   );
 }
 
